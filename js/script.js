@@ -23,3 +23,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
+function openLogin() {
+    let modal = document.getElementById('modal-login');
+    let html = document.documentElement;
+
+    modal.className += ' is-active';
+    html.className += ' is-clipped';
+}
+
+function closeLogin() {
+    let modal = document.getElementById('modal-login');
+    let html = document.documentElement;
+
+    modal.classList.remove('is-active');
+    html.classList.remove('is-clipped');
+}

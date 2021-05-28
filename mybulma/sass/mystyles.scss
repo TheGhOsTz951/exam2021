@@ -4,27 +4,19 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
 
 // Set your brand colors
-$purple: #8A4D76;
-$pink: #FA7C91;
-$brown: #757763;
-$beige-light: #D0D1CD;
-$beige-lighter: #EFF0EB;
-$mycolor: #F7D768;
+$orangeyellowcrayola: #F7D768;
+$notBlack: #C3C3C3;
+$log: #4167D1;
 
 // Update Bulma's global variables
-$family-sans-serif: "Nunito", sans-serif;
-$grey-dark: $brown;
-$grey-light: $beige-light;
-$primary: $mycolor;
-$link: $pink;
-$widescreen-enabled: false;
-$fullhd-enabled: false;
+$primary: $orangeyellowcrayola;
+$link: $log;
 
 // Update some of Bulma's component variables
-$body-background-color: $beige-lighter;
-$control-border-width: 2px;
-$input-border-color: transparent;
-$input-shadow: none;
+$navbar-box-shadow-color: black;
+$navbar-box-shadow-size: 0pt 0pt 10pt -4pt;
+
+$footer-background-color: $notBlack;
 
 // Import only what you need from Bulma
 @import "../node_modules/bulma/sass/utilities/_all.sass";
@@ -36,3 +28,4 @@ $input-shadow: none;
 @import "../node_modules/bulma/sass/components/navbar.sass";
 @import "../node_modules/bulma/sass/layout/hero.sass";
 @import "../node_modules/bulma/sass/layout/section.sass";
+@import "../node_modules/bulma/sass/layout/footer.sass";
