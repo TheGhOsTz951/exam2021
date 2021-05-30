@@ -1,44 +1,64 @@
--- Add truncate tables
--- All type are to change i think
-
 CREATE TABLE Utente (
-    id int primary key,
+    id int AUTO_INCREMENT primary key,
     nome varchar(255),
     cognome varchar(255),
     email varchar(255),
     pw varchar(255),
+    città varchar(255),
     indirizzo varchar(255),
     civico int,
     dataNascita date
 );
 
-CREATE TABLE Ordine (
-    id int primary key,
-    descrizione text(),
-    prezzoTot double(20, 4),
-    confermato boolean,
-    dataConsegna date,
-    dataOrdine date,
-    fk_id_utente int foreign key references Utente(id),
-    fk_id_negozio int foreign key references Negozio(id)
-);
-
 CREATE TABLE Negozio (
     id int primary key,
     nominativo varchar(255),
+    descrizione text(1000),
     email varchar(255),
+    cellulare varchar(255),
     pw varchar(255),
+    città varchar(255),
     indirizzo varchar(255),
-    civico int,
-    cellulare varchar(255)
+    civico int
+);
+
+CREATE TABLE Ordine (
+    id int primary key,
+    descrizione text(1000),
+    prezzoTot double(20, 4),
+    confermato boolean,
+    dataConsegna dateTime,
+    dataOrdine dateTime,
+    fk_id_utente int,
+    fk_id_negozio int,
+    FOREIGN KEY (fk_id_utente) REFERENCES Utente(id),
+    FOREIGN KEY (fk_id_negozio) REFERENCES Negozio(id)
 );
 
 CREATE TABLE Prodotto (
     id int primary key,
     nome varchar(255),
-    descrizione text(),
+    descrizione text(1000),
     prezzo double(20, 4),
     foto varchar(255),
-    categoria int,
-    fk_id_negozio foreign key references Negozio(id)
+    categoria varchar(255),
+    fk_id_negozio int,
+    FOREIGN KEY (fk_id_negozio) REFERENCES Negozio(id)
+);
+
+CREATE TABLE Contiene (
+    quantità int,
+    fk_id_ordine int,
+    fk_id_prodotto int,
+    FOREIGN KEY (fk_id_ordine) REFERENCES Ordine(id),
+    FOREIGN KEY (fk_id_prodotto) REFERENCES Prodotto(id)
+);
+
+CREATE TABLE Orario (
+    id int primary key,
+    giorno int,
+    oraChiusura dateTime,
+    oraApertura dateTime,
+    fk_id_negozio int,
+    FOREIGN KEY (fk_id_negozio) REFERENCES Negozio(id)
 );

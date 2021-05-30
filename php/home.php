@@ -1,31 +1,178 @@
 <!DOCTYPE html>
 
 <?php
-    $username = 'test';
-    $password = 'pw';
+    $servername = "localhost";
+    $username = "bottegasasso";
+    $password = "";
+    $dbname = "my_bottegasasso";
+
+    $type = '0';
+    $name = $surname = $mail = $pw = $date = $city = $address = $civic = '';
+
+    $logErr = $nameErr = $surnameErr = $mailErr = $pwErr = $dateErr = $cityErr = $addressErr = $civicErr = $acceptErr = '';
+    $err = 0;
 
     session_start();
  
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $type = test_input($_POST["tipo"]);
 
-        $usr = test_input($_POST["log_username"]);
-        $pw = test_input($_POST["log_password"]);
+        if ($type == 0) {  // Type = 0 indica la login
+            $mail = test_input($_POST["log_mail"]);
+            $pw = test_input($_POST["log_password"]);
+            $hash = null;
 
-        if ($usr == $username && $pw == $password) {
-            $_SESSION['username'] = $usr;
-        } else {
+            $conn = new mysqli($servername, $username, $password, $dbname);
+                
+            if ($conn->connect_error) {
+                die("Errore del database! Riprova più tardi.");
+            }
+
+            $sql = "SELECT pw FROM Utente WHERE email='$mail'";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                    $hash = $row['pw'];
+                }
+            }
+
+            // Verifica se l'hash corrisponde alla password (hash: password cifrata)
+            $verify = password_verify($pw, $hash);
+
+            // Se la password è giusta assegna un valore alla variabile di sessione per far capire che l'utente ha loggato
+            if ($verify) {
+                $_SESSION['email'] = $mail;
+            } else {
+                $logErr = "* Email o password errata";
+                $err++;
+            }
+        } else if ($type == 1) {  // Type = 1 indica la registrazione
             
+            // Vari controlli agli input del form
+            if (empty($_POST["sign_name"])) {  // Nome
+                $nameErr = '* Inserire nome';
+                $err++;
+            } else {
+                $name = test_input($_POST["sign_name"]);
+
+                if (!preg_match("/^[a-zA-Z-' ]*$/", $name)) {
+                    $nameErr = "* Inserire solo lettere";
+                    $err++;
+                }
+            }
+
+            if (empty($_POST["sign_surname"])) {  // Cognome
+                $surnameErr = '* Inserire cognome';
+                $err++;
+            } else {
+                $surname = test_input($_POST["sign_surname"]);
+
+                if (!preg_match("/^[a-zA-Z-' ]*$/", $surname)) {
+                    $surnameErr = "* Inserire solo lettere";
+                    $err++;
+                }
+            }
+
+            if (empty($_POST["sign_email"])) {  // Email
+                $mailErr = '* Inserire email';
+                $err++;
+            } else {
+                $mail = test_input($_POST["sign_email"]);
+
+                if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+                    $mailErr = "* Formato email non valido";
+                    $err++;
+                }
+            }
+
+            if (empty($_POST["sign_password"])) {  // Password
+                $pwErr = '* Inserire password';
+                $err++;
+            } else {
+                $pw = test_input($_POST["sign_password"]);
+            }
+
+            if (empty($_POST["sign_date"])) {  // Data
+                $dateErr = '* Inserire data';
+                $err++;
+            } else {
+                $date = test_input($_POST["sign_date"]);
+            }
+
+            if (empty($_POST["sign_city"])) {  // Città
+                $cityErr = '* Inserire città';
+                $err++;
+            } else {
+                $city = test_input($_POST["sign_city"]);
+
+                if (!preg_match("/^[a-zA-Z-' ]*$/", $city)) {
+                    $cityErr = "* Inserire solo lettere";
+                    $err++;
+                }
+            }
+
+            if (empty($_POST["sign_address"])) {  // Indirizzo
+                $addressErr = '* Inserire indirizzo';
+                $err++;
+            } else {
+                $address = test_input($_POST["sign_address"]);
+
+                if (!preg_match("/^[a-zA-Z-' ]*$/", $address)) {
+                    $addressErr = "* Inserire solo lettere";
+                    $err++;
+                }
+            }
+
+            if (empty($_POST["sign_civic"])) {  // Civico
+                $civicErr = '* Inserire civico';
+                $err++;
+            } else {
+                $civic = test_input($_POST["sign_civic"]);
+            }
+
+            if (!isset($_POST["sign_accept"])) {  // Checkbox
+                $acceptErr = '* Accetta per registrarti';
+                $err++;
+            }
+
+            // Controllo errori
+            if ($err == 0) {
+                $pw_hash = password_hash($pw, PASSWORD_BCRYPT);
+
+                $conn = new mysqli($servername, $username, $password, $dbname);
+                
+                if ($conn->connect_error) {
+                    die("Errore del database! Riprova più tardi.");
+                } 
+
+                $sql = "INSERT INTO Utente (nome, cognome, email, pw, città, indirizzo, civico, dataNascita)
+                VALUES ('$name', '$surname', '$mail', '$pw_hash', '$city', '$address', '$civic', '$date')";
+
+                if ($conn->query($sql) === TRUE) {
+                    echo "New record created successfully";
+                } else {
+                    echo "Error: " . $sql . "<br>" . $conn->error;
+                }
+            }
+        } else {
+            echo 'Errore nella compilazione da parte del sito! Riprova!';
         }
     }
-
-    if (isset($_GET['nigga'])) {
-        unset($_SESSION['username']);
+    
+    // Se nella url il valore get = true l'if parte
+    if (isset($_GET['exit'])) {
+        unset($_SESSION['email']);
     }
 
-    if (isset($_SESSION['username'])) {
-        echo 'It works gro, ciao' . $username;
+    // Se la variabile di sessione email esiste vuol dire che l'utente ha loggato
+    if (isset($_SESSION['email'])) {
+        $logButton = '<a id="logButton" class="button is-danger" href="home.php?exit=true">Esci</a>';
+    } else {
+        $logButton = '<a id="logButton" class="button is-link" onclick="openLogin();">Accedi</a>';
     }
 
+    // Testa gli input per evitare js injection
     function test_input($data) {
         $data = trim($data);
         $data = stripslashes($data);
@@ -58,9 +205,11 @@
 
                     <div id="logDiv" class="">
                         <div class="field">
-                            <label class="label">Username</label>
+                            <label class="label">Email</label>
                             <div class="control has-icons-left">
-                                <input class="input" name="log_username" type="text" placeholder="Luigi987">
+                                <input class="input" name="log_mail" type="text" placeholder="rossi.luigi@email.com"
+                                value="<?php echo isset($_POST['log_mail']) ? $_POST['log_mail'] : '' ?>">
+
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-user-circle"></i>
                                 </span>
@@ -70,13 +219,16 @@
                         <div class="field">
                             <label class="label">Password</label>
                             <div class="control has-icons-left">
-                                <input class="input" name="log_password" type="password
-                                " placeholder="CiaoMondo32">
+                                <input class="input" name="log_password" type="password" placeholder="CiaoMondo32"
+                                value="<?php echo isset($_POST['log_password']) ? $_POST['log_password'] : '' ?>">
+
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-lock"></i>
                                 </span>
                             </div>
                         </div>
+
+                        <p class="help is-danger has-text-centered"><?php echo $logErr; ?></p>
                     
                         <div class="field">
                             <div class="control buttons is-centered mt-5">
@@ -87,6 +239,8 @@
 
                     <!-- FINE SEZIONE ACCEDI -->
 
+                    <input type="text" name="tipo" id="typeTeller" class="hidden" value="0">
+
                     <!-- INIZIO SEZIONE REGISTRAZIONE -->
 
                     <div id="signDiv" class="hidden">
@@ -94,63 +248,81 @@
                             <div class="column is-6 mb-0 pb-0 field">
                                 <label class="label">Nome</label>
                                 <div class="control has-icons-left">
-                                    <input class="input" type="text" placeholder="Luca">
+                                    <input class="input" name="sign_name" type="text" placeholder="Luca" 
+                                    value="<?php echo isset($_POST['sign_name']) ? $_POST['sign_name'] : '' ?>">
+
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-signature"></i>
                                     </span>
                                 </div>
+                                <p class="help is-danger"><?php echo $nameErr; ?></p>
                             </div>
                             
                             <div class="column mb-0 pb-0 field">
                                 <label class="label">Cognome</label>
                                 <div class="control has-icons-left">
-                                    <input class="input" type="text" placeholder="Di Giacomo">
+                                    <input class="input" name="sign_surname" type="text" placeholder="Di Giacomo"
+                                    value="<?php echo isset($_POST['sign_surname']) ? $_POST['sign_surname'] : '' ?>">
+
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-signature"></i>
                                     </span>
                                 </div>
+                                <p class="help is-danger"><?php echo $surnameErr; ?></p>
                             </div>
                         </div>
 
                         <div class="field">
                             <label class="label">Email</label>
                             <div class="control has-icons-left">
-                                <input class="input" type="text" placeholder="luca.giacomo24@mail.com">
+                                <input class="input" name="sign_email" type="text" placeholder="luca.giacomo24@mail.com"
+                                value="<?php echo isset($_POST['sign_email']) ? $_POST['sign_email'] : '' ?>">
+
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-envelope"></i>
                                 </span>
                             </div>
+                            <p class="help is-danger"><?php echo $mailErr; ?></p>
                         </div>
 
                         <div class="field">
                             <label class="label">Password</label>
                             <div class="control has-icons-left">
-                                <input class="input" type="password" placeholder="qwerty098">
+                                <input class="input" name="sign_password" type="password" placeholder="qwerty098"
+                                value="<?php echo isset($_POST['sign_password']) ? $_POST['sign_password'] : '' ?>">
+
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-lock"></i>
                                 </span>
                             </div>
+                            <p class="help is-danger"><?php echo $pwErr; ?></p>
                         </div>
 
                         <div class="columns">
                             <div class="column is-7 mb-0 pb-0 field">
                                 <label class="label">Data di nascita</label>
                                 <div class="control has-icons-left">
-                                    <input class="input" type="date">
+                                    <input class="input" name="sign_date" type="date"
+                                    value="<?php echo isset($_POST['sign_date']) ? $_POST['sign_date'] : '' ?>">
+
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-calendar-alt"></i>
                                     </span>
                                 </div>
+                                <p class="help is-danger"><?php echo $dateErr; ?></p>
                             </div>
                             
                             <div class="column mb-0 pb-0 field">
                                 <label class="label">Città</label>
                                 <div class="control has-icons-left">
-                                    <input class="input" type="text" placeholder="Milano">
+                                    <input class="input" name="sign_city" type="text" placeholder="Milano"
+                                    value="<?php echo isset($_POST['sign_city']) ? $_POST['sign_city'] : '' ?>">
+
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-building"></i>
                                     </span>
                                 </div>
+                                <p class="help is-danger"><?php echo $cityErr; ?></p>
                             </div>
                         </div>
 
@@ -158,31 +330,38 @@
                             <div class="column is-9 mb-0 field">
                                 <label class="label">Indirizzo</label>
                                 <div class="control has-icons-left">
-                                    <input class="input" type="text" placeholder="Via Giulio Cesare">
+                                    <input class="input" name="sign_address" type="text" placeholder="Via Giulio Cesare"
+                                    value="<?php echo isset($_POST['sign_address']) ? $_POST['sign_address'] : '' ?>">
+
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-globe-europe"></i>
                                     </span>
                                 </div>
+                                <p class="help is-danger"><?php echo $addressErr; ?></p>
                             </div>
 
                             <div class="column mb-0 field">
                                 <label class="label">Civico</label>
                                 <div class="control has-icons-left">
-                                    <input class="input" type="number" placeholder="86">
+                                    <input class="input" name="sign_civic" type="number" placeholder="86"
+                                    value="<?php echo isset($_POST['sign_civic']) ? $_POST['sign_civic'] : '' ?>">
+
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-compass"></i>
                                     </span>
                                 </div>
+                                <p class="help is-danger"><?php echo $civicErr; ?></p>
                             </div>
                         </div>
                         
                         <div class="field">
                             <div class="control">
                                 <label class="checkbox">
-                                    <input type="checkbox">
+                                    <input type="checkbox" name="sign_accept">
                                     Accetto i <a href="termini.html">termini e condizioni</a>
                                 </label>
                             </div>
+                            <p class="help is-danger"><?php echo $acceptErr; ?></p>
                         </div>
 
                         <div class="field">
@@ -246,9 +425,7 @@
 
                 <div class="navbar-item">
                     <div class="buttons">
-                        <a class="button is-link" onclick="openLogin();">
-                            Accedi
-                        </a>
+                        <?php echo $logButton; ?>
                     </div>
                 </div>
             </div>
@@ -266,8 +443,6 @@
             <span id="txtHint"></span>
         </div>
     </div>
-
-    <a href="home.php?nigga=true">sesso</a>
 
     <div class="test">
         <p>Lorem ipsum, dolor sit amet consectetur adipisicing.</p>
@@ -289,3 +464,11 @@
 <script src="../js/bulma-calendar.min.js"></script>
 </html>
 
+<?php 
+    // Se ci sono stati errori nella login/signup, riapre l'ultima utilizzata
+    if ($err > 0 && $type == 1) {
+        echo '<script>openLogin(); changeLogin();</script>';
+    } else if ($err > 0 && $type == 0) {
+        echo '<script>openLogin();</script>';
+    }
+?>

@@ -46,13 +46,19 @@ function changeLogin() {
 
     let logTitle = document.getElementById('logTitle');
     let logText = document.getElementById('logText');
+    let logButton = document.getElementById('logButton');
+
+    let typeTeller = document.getElementById('typeTeller');
 
     if (logDiv.style.display != 'none') {
         logDiv.style.display = 'none';
         signDiv.style.display = 'block';
 
-        logTitle.textContent='Registrati';
+        logTitle.textContent = 'Registrati';
         logText.innerHTML = 'Sei già registrato? ';
+        logButton.textContent = 'Registrati';
+
+        typeTeller.value = '1';
 
         let tag = document.createElement('a');
         let a = document.createTextNode("Accedi!");
@@ -68,6 +74,9 @@ function changeLogin() {
         
         logTitle.textContent = 'Accedi';
         logText.innerHTML = 'Non sei registrato? ';
+        logButton.textContent = 'Accedi';
+
+        typeTeller.value = '0';
 
         let tag = document.createElement('a');
         let a = document.createTextNode("Registrati!");
