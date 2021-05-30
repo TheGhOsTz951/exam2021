@@ -27,6 +27,16 @@ body {
     border: 4px solid #F7D768;
 }
 
+/* --- LOGIN SECTION --- */
+
+.hidden {
+    display: none;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 /* --- FOOTER SECTION --- */
 
 /* --- TEST SECTION --- */
