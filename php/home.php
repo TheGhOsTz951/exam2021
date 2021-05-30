@@ -1,4 +1,39 @@
 <!DOCTYPE html>
+
+<?php
+    $username = 'test';
+    $password = 'pw';
+
+    session_start();
+ 
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+        $usr = test_input($_POST["log_username"]);
+        $pw = test_input($_POST["log_password"]);
+
+        if ($usr == $username && $pw == $password) {
+            $_SESSION['username'] = $usr;
+        } else {
+            
+        }
+    }
+
+    if (isset($_GET['nigga'])) {
+        unset($_SESSION['username']);
+    }
+
+    if (isset($_SESSION['username'])) {
+        echo 'It works gro, ciao' . $username;
+    }
+
+    function test_input($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
+    }
+?>
+
 <html class="has-navbar-fixed-top" lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,14 +53,14 @@
             <div class="box px-5 py-4">
                 <h1 id="logTitle" class="has-text-centered is-size-3 mb-4">Accedi</h1>
 
-                <form action="">
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">  
                     <!-- INIZIO SEZIONE ACCEDI -->
 
                     <div id="logDiv" class="">
                         <div class="field">
                             <label class="label">Username</label>
                             <div class="control has-icons-left">
-                                <input class="input" type="text" placeholder="Es. Luigi987">
+                                <input class="input" name="log_username" type="text" placeholder="Luigi987">
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-user-circle"></i>
                                 </span>
@@ -35,7 +70,8 @@
                         <div class="field">
                             <label class="label">Password</label>
                             <div class="control has-icons-left">
-                                <input class="input" type="text" placeholder="Es. CiaoMondo32">
+                                <input class="input" name="log_password" type="password
+                                " placeholder="CiaoMondo32">
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-lock"></i>
                                 </span>
@@ -44,7 +80,7 @@
                     
                         <div class="field">
                             <div class="control buttons is-centered mt-5">
-                                <button class="button is-success">Accedi</button>
+                                <button class="button is-success" type="submit">Accedi</button>
                             </div>
                         </div>
                     </div>
@@ -151,7 +187,7 @@
 
                         <div class="field">
                             <div class="control buttons is-centered mt-5">
-                                <button class="button is-success">Registrati</button>
+                                <button class="button is-success" type="submit">Registrati</button>
                             </div>
                         </div>
                     </div>
@@ -230,6 +266,8 @@
             <span id="txtHint"></span>
         </div>
     </div>
+
+    <a href="home.php?nigga=true">sesso</a>
 
     <div class="test">
         <p>Lorem ipsum, dolor sit amet consectetur adipisicing.</p>
