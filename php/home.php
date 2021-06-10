@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 
-<?php 
-    // TESTING
-    $nameErr = $_GET['id'];
-    $surnameErr = $_GET['sex'];
-    
-    // END
+<?php
+    $servername = "localhost";
+    $username = "bottegasasso";
+    $password = "";
+    $dbname = "my_bottegasasso";
 
+    $type = '0';
+    $name = $surname = $mail = $pw = $date = $city = $address = $civic = '';
+
+    $logErr = $nameErr = $surnameErr = $mailErr = $pwErr = $dateErr = $cityErr = $addressErr = $civicErr = $acceptErr = '';
+    $err = 0;
+
+    session_start();
+ 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $type = test_input($_POST["tipo"]);
 
@@ -44,6 +51,109 @@
             $conn->close();
         } else if ($type == 1) {  // Type = 1 indica la registrazione
             
+            // Vari controlli agli input del form
+            if (empty($_POST["sign_name"])) {  // Nome
+                $nameErr = '* Inserire nome';
+                $err++;
+            } else {
+                $name = test_input($_POST["sign_name"]);
+
+                if (!preg_match("/^[a-zA-Z-' ]*$/", $name)) {
+                    $nameErr = "* Inserire solo lettere";
+                    $err++;
+                }
+            }
+
+            if (empty($_POST["sign_surname"])) {  // Cognome
+                $surnameErr = '* Inserire cognome';
+                $err++;
+            } else {
+                $surname = test_input($_POST["sign_surname"]);
+
+                if (!preg_match("/^[a-zA-Z-' ]*$/", $surname)) {
+                    $surnameErr = "* Inserire solo lettere";
+                    $err++;
+                }
+            }
+
+            if (empty($_POST["sign_email"])) {  // Email
+                $mailErr = '* Inserire email';
+                $err++;
+            } else {
+                $mail = test_input($_POST["sign_email"]);
+            }
+
+            if (empty($_POST["sign_password"])) {  // Password
+                $pwErr = '* Inserire password';
+                $err++;
+            } else {
+                $pw = test_input($_POST["sign_password"]);
+            }
+
+            if (empty($_POST["sign_date"])) {  // Data
+                $dateErr = '* Inserire data';
+                $err++;
+            } else {
+                $date = test_input($_POST["sign_date"]);
+            }
+
+            if (empty($_POST["sign_city"])) {  // Città
+                $cityErr = '* Inserire città';
+                $err++;
+            } else {
+                $city = test_input($_POST["sign_city"]);
+
+                if (!preg_match("/^[a-zA-Z-' ]*$/", $city)) {
+                    $cityErr = "* Inserire solo lettere";
+                    $err++;
+                }
+            }
+
+            if (empty($_POST["sign_address"])) {  // Indirizzo
+                $addressErr = '* Inserire indirizzo';
+                $err++;
+            } else {
+                $address = test_input($_POST["sign_address"]);
+
+                if (!preg_match("/^[a-zA-Z-' ]*$/", $address)) {
+                    $addressErr = "* Inserire solo lettere";
+                    $err++;
+                }
+            }
+
+            if (empty($_POST["sign_civic"])) {  // Civico
+                $civicErr = '* Inserire civico';
+                $err++;
+            } else {
+                $civic = test_input($_POST["sign_civic"]);
+            }
+
+            if (!isset($_POST["sign_accept"])) {  // Checkbox
+                $acceptErr = '* Accetta per registrarti';
+                $err++;
+            }
+
+            // Controllo errori
+            if ($err == 0) {
+                $pw_hash = password_hash($pw, PASSWORD_BCRYPT);
+
+                $conn = new mysqli($servername, $username, $password, $dbname);
+                
+                if ($conn->connect_error) {
+                    die("Errore del database! Riprova più tardi.");
+                } 
+
+                $sql = "INSERT INTO Utente (nome, cognome, email, pw, città, indirizzo, civico, dataNascita)
+                VALUES ('$name', '$surname', '$mail', '$pw_hash', '$city', '$address', '$civic', '$date')";
+
+                if ($conn->query($sql) === TRUE) {
+                    echo "Registrazione riuscita!";
+                } else {
+                    echo "Errore nella registrazione";
+                }
+
+                $conn->close();
+            }
         } else {
             echo 'Errore nella compilazione da parte del sito! Riprova!';
         }
@@ -59,6 +169,14 @@
         $logButton = '<a id="logButton" class="button is-danger" href="home.php?exit=true">Esci</a>';
     } else {
         $logButton = '<a id="logButton" class="button is-link" onclick="openLogin();">Accedi</a>';
+    }
+
+    // Testa gli input per evitare js injection
+    function test_input($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
     }
 ?>
 
@@ -81,7 +199,7 @@
             <div class="box px-5 py-4">
                 <h1 id="logTitle" class="has-text-centered is-size-3 mb-4">Accedi</h1>
 
-                  
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">  
                     <!-- INIZIO SEZIONE ACCEDI -->
 
                     <div id="logDiv" class="">
@@ -124,7 +242,6 @@
 
                     <!-- INIZIO SEZIONE REGISTRAZIONE -->
 
-                    <form action="../php/signup.php" method="post">
                     <div id="signDiv" class="hidden">
                         <div class="columns">
                             <div class="column is-6 mb-0 pb-0 field">
@@ -252,9 +369,9 @@
                             </div>
                         </div>
                     </div>
-                    </form>
+
                     <!-- FINE SEZIONE REGISTRAZIONE -->
-                
+                </form>
 
                 <p id="logText" class="help has-text-centered mt-5">
                     Non sei registrato? <a onclick="changeLogin();">Registrati!</a>
