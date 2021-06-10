@@ -47,6 +47,8 @@
                 $logErr = "* Email o password errata";
                 $err++;
             }
+
+            $conn->close();
         } else if ($type == 1) {  // Type = 1 indica la registrazione
             
             // Vari controlli agli input del form
@@ -79,11 +81,6 @@
                 $err++;
             } else {
                 $mail = test_input($_POST["sign_email"]);
-
-                if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-                    $mailErr = "* Formato email non valido";
-                    $err++;
-                }
             }
 
             if (empty($_POST["sign_password"])) {  // Password
@@ -150,10 +147,12 @@
                 VALUES ('$name', '$surname', '$mail', '$pw_hash', '$city', '$address', '$civic', '$date')";
 
                 if ($conn->query($sql) === TRUE) {
-                    echo "New record created successfully";
+                    echo "Registrazione riuscita!";
                 } else {
-                    echo "Error: " . $sql . "<br>" . $conn->error;
+                    echo "Errore nella registrazione";
                 }
+
+                $conn->close();
             }
         } else {
             echo 'Errore nella compilazione da parte del sito! Riprova!';
@@ -207,7 +206,7 @@
                         <div class="field">
                             <label class="label">Email</label>
                             <div class="control has-icons-left">
-                                <input class="input" name="log_mail" type="text" placeholder="rossi.luigi@email.com"
+                                <input class="input" name="log_mail" type="email" placeholder="rossi.luigi@email.com"
                                 value="<?php echo isset($_POST['log_mail']) ? $_POST['log_mail'] : '' ?>">
 
                                 <span class="icon is-small is-left">
@@ -275,7 +274,7 @@
                         <div class="field">
                             <label class="label">Email</label>
                             <div class="control has-icons-left">
-                                <input class="input" name="sign_email" type="text" placeholder="luca.giacomo24@mail.com"
+                                <input class="input" name="sign_email" type="email" placeholder="luca.giacomo24@mail.com"
                                 value="<?php echo isset($_POST['sign_email']) ? $_POST['sign_email'] : '' ?>">
 
                                 <span class="icon is-small is-left">
@@ -384,7 +383,11 @@
 
     <nav class="navbar is-fixed-top is-primary has-shadow">
         <div class="navbar-brand">
-            <a class="navbar-item" href="home.html">
+            <a class="navbar-item" href="../php/home.php">
+                <img src="../images/logoMH.png" alt="Mall@Home" id="brand-logo">
+            </a>
+
+            <a class="navbar-item" href="../php/home.php">
                 Mall@Home
             </a>
     
@@ -432,28 +435,36 @@
         </div>
     </nav>
 
-    <div class="columns is-mobile divHeader">
-        <div class="column is-6 is-offset-3 box has-text-centered divSearch">
-            <h1 class="my-2">Inserisci la tua località per visualizzare gli alimentari disponibili in zona</h1>
-            
-            <form action="">
-                <input class="column is-6 input is-primary mt-4 mb-2" type="text" placeholder="Es. Milano"
-                    onkeyup="showHint(this.value)">
-            </form>
-            <span id="txtHint"></span>
+    <main>
+        <div class="columns is-mobile divHeader mb-0">
+            <div class="column is-6 is-offset-3 box has-text-centered divSearch">
+                <h1 id="searchTitle" class="my-2">Cerca Negozio</h1>
+        
+                <div class="column is-8 is-offset-2">
+                    <div class="control has-icons-left">
+                        <input class="input is-primary py-5" type="text" placeholder="Es. Milano"
+                            onkeyup="showHint(this.value)">
+        
+                        <span class="icon is-small is-left py-5">
+                            <i class="fas fa-signature"></i>
+                        </span>
+                    </div>
+                </div>
+        
+                <div id="schede-negozi"></div>
+            </div>
+        
+            <div class=""></div>
         </div>
-    </div>
-
-    <div class="test">
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing.</p>
-    </div>
-
+    </main>
+        
+        
     <footer class="footer">
         <div class="content has-text-centered">
-          <p>
-            <strong>Mall@Home</strong> creato da Alessio Ricciuti. Il codice sorgente usa la licenza
-            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
-          </p>
+            <p>
+                <strong>Mall@Home</strong> creato da Alessio Ricciuti. Il codice sorgente usa la licenza
+                <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+            </p>
         </div>
     </footer>
 </body>

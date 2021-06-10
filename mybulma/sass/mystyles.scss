@@ -4,17 +4,18 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
 
 // Set your brand colors
-$orangeyellowcrayola: #F7D768;
-$notBlack: #C3C3C3;
-$log: #4167D1;
+$orangeyellowcrayola: #1b1b1b;
+$notBlack: #c3c3c3d8;
+$log: #646464;
 
 // Update Bulma's global variables
 $primary: $orangeyellowcrayola;
 $link: $log;
 
 // Update some of Bulma's component variables
-$navbar-box-shadow-color: black;
+$navbar-box-shadow-color: rgb(0, 0, 0);
 $navbar-box-shadow-size: 0pt 0pt 10pt -4pt;
+//$navbar-height: 95px;
 
 $footer-background-color: $notBlack;
 

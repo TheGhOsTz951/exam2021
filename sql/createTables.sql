@@ -11,7 +11,7 @@ CREATE TABLE Utente (
 );
 
 CREATE TABLE Negozio (
-    id int primary key,
+    id int AUTO_INCREMENT primary key,
     nominativo varchar(255),
     descrizione text(1000),
     email varchar(255),
@@ -23,9 +23,9 @@ CREATE TABLE Negozio (
 );
 
 CREATE TABLE Ordine (
-    id int primary key,
+    id int AUTO_INCREMENT primary key,
     descrizione text(1000),
-    prezzoTot double(20, 4),
+    prezzoTot double(20, 2),
     confermato boolean,
     dataConsegna dateTime,
     dataOrdine dateTime,
@@ -36,10 +36,10 @@ CREATE TABLE Ordine (
 );
 
 CREATE TABLE Prodotto (
-    id int primary key,
+    id int AUTO_INCREMENT primary key,
     nome varchar(255),
     descrizione text(1000),
-    prezzo double(20, 4),
+    prezzo double(20, 2),
     foto varchar(255),
     categoria varchar(255),
     fk_id_negozio int,
@@ -55,7 +55,7 @@ CREATE TABLE Contiene (
 );
 
 CREATE TABLE Orario (
-    id int primary key,
+    id int AUTO_INCREMENT primary key,
     giorno int,
     oraChiusura dateTime,
     oraApertura dateTime,
