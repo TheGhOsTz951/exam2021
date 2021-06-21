@@ -11,15 +11,18 @@
         die("Connection failed: " . $conn->connect_error);
     } 
 
-    $sql = "SELECT nominativo, descrizione, città, indirizzo, civico FROM negozio";
+    $sql = "SELECT nominativo, descrizione, città, indirizzo, civico, foto FROM negozio";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         // output data of each row
         while($row = $result->fetch_assoc()) {
             $cities[] = $row['città'];
-            $schede[] = "<div class='scheda-interna'><h1>" . $row['nominativo'] . 
-            "</h1><p>" . $row['descrizione'] . "</p></div>";
+            $schede[] = "<div class='content scheda-interna'><div class='scheda-top-content'>" . 
+            "<img src='" . $row['foto'] . "'><h1>" . $row['nominativo'] . "</h1>" .
+            "<p class='content-desc'>" . $row['descrizione'] . "</p>" . 
+            "<p class='content-civico'>" . $row['indirizzo'] . ", " . $row['civico'] .  "</p></div>" .
+            "<div class='scheda-bottom-content'><button class='button is-info is-medium'>Apri negozio</button></div></div>";
         }
     } else {
         echo "0 results";
@@ -50,5 +53,5 @@
     }
 
     // Output "no suggestion" if no hint was found or output correct values
-    echo $result === "" ? "<p style='color:red'>Nessun negozio presente nella città inserita</p>" : $result;
+    echo $result === "" ? "<p id='notFound'>Nessun negozio presente nella città inserita!</p>" : $result;
 ?>

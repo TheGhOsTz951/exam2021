@@ -87,6 +87,13 @@ function changeLogin() {
     }
 }
 
+function checkLogin() {
+    
+}
+
+function checkSignup() {
+
+}
 
 // --- AJAX Things ---
 

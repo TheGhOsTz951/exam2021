@@ -49,6 +49,12 @@ main {
     1px -1px 0 rgb(255, 165, 91), -1px 1px 0 rgb(255, 165, 91);
 }
 
+#searchBar {
+    flex: 1;
+    margin: auto;
+    max-width: 500px;
+}
+
 /* --- LOGIN SECTION --- */
 
 .hidden {
@@ -61,21 +67,69 @@ input[type=number] {
 
 /* --- SCHEDE SECTION --- */
 
+#notFound {
+    padding: 20px 30px;
+    background-color: white;
+    border-radius: 5px;
+    border: 6px solid #FF4848;
+    box-shadow: 0px 1px 10px 1px black;
+    font-size: 26px;
+    color: #FF4848;
+}
+
 #schede-negozi {
     display: flex;
     flex: 1;
+    margin: 150px 0 0 0;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 .scheda-interna {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 100px !important;
+    width: 450px;
+    height: 400px;
     padding: 5px;
     background-color: white;
     border-radius: 8px;
+    border: 5px solid #FF9317;
+    box-shadow: 0px 2px 10px 1px black;
+}
+
+.scheda-interna img {
+    margin-top: -50px;
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 10px -4px black;
+}
+
+.scheda-interna h1 {
+    color: black;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    margin: 15px 0 25px !important;
+}
+
+.scheda-top-content {
+    flex: 1;
+}
+
+.content-desc {
+    text-align: justify;
+    padding: 0 20px;
+}
+
+.content-civico {
+    font-style: oblique;
+    font-size: 14px;
+    text-transform: capitalize;
+}
+
+.scheda-bottom-content {
+    margin: 0 0 15px;
 }
 
 /* --- FOOTER SECTION --- */
-
-/* --- TEST SECTION --- */
-
-.test {
-    margin: 1000px 0 0 0;
-}

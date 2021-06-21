@@ -189,7 +189,7 @@
     <link rel="stylesheet" href="../css/bulma.min.css">
     <link rel="stylesheet" href="../css/mybulma.css">
     <link rel="stylesheet" href="../css/styles.css">
-    <link rel="stylesheet" href="../css/bulma-calendar.min.css">
+    <link rel="shortcut icon" href="../images/logo.ico">
 </head>
 
 <body>
@@ -437,10 +437,10 @@
 
     <main>
         <div class="columns is-mobile divHeader mb-0">
-            <div class="column is-6 is-offset-3 box has-text-centered divSearch">
-                <h1 id="searchTitle" class="my-2">Cerca Negozio</h1>
+            <div class="column is-10 is-offset-1 has-text-centered divSearch">
+                <h1 id="searchTitle" class="my-2">Cerca la tua Città</h1>
         
-                <div class="column is-8 is-offset-2">
+                <div id="searchBar" class="column">
                     <div class="control has-icons-left">
                         <input class="input is-primary py-5" type="text" placeholder="Es. Milano"
                             onkeyup="showHint(this.value)">
@@ -472,7 +472,6 @@
 <script src="https://kit.fontawesome.com/0d1c6dcc96.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="../js/script.js"></script>
-<script src="../js/bulma-calendar.min.js"></script>
 </html>
 
 <?php 
