@@ -2,9 +2,9 @@
 
 <?php
     $servername = "localhost";
-    $username = "bottegasasso";
+    $username = "labottegadisasso";
     $password = "";
-    $dbname = "my_bottegasasso";
+    $dbname = "my_labottegadisasso";
 
     $type = '0';
     $name = $surname = $mail = $pw = $date = $city = $address = $civic = '';
@@ -357,7 +357,7 @@
                             <div class="control">
                                 <label class="checkbox">
                                     <input type="checkbox" name="sign_accept">
-                                    Accetto i <a href="termini.html">termini e condizioni</a>
+                                    Accetto i <a href="../html/termini.html">termini e condizioni</a>
                                 </label>
                             </div>
                             <p class="help is-danger"><?php echo $acceptErr; ?></p>
@@ -387,8 +387,8 @@
                 <img src="../images/logoMH.png" alt="Mall@Home" id="brand-logo">
             </a>
 
-            <a class="navbar-item" href="../php/home.php">
-                Mall@Home
+            <a id='brand-name' class="navbar-item" href="../php/home.php">
+                MALL@HOME
             </a>
     
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -416,11 +416,11 @@
                         <a class="navbar-item" href="../html/privacy.html">
                             Privacy policy
                         </a>
-                        <a class="navbar-item" href="../html/contatti.html">
+                        <a class="navbar-item" href="#">
                             Contatti
                         </a>
                         <hr class="navbar-divider">
-                        <a class="navbar-item" href="../html/segnalazioni.html">
+                        <a class="navbar-item" href="mailto:mallathome@gmail.com?subject=Segnalazione problema&body=Vorrei far notare il problema relativo a - SCRIVERE QUI IL PROBLEMA -">
                             Segnala un problema
                         </a>
                     </div>
@@ -461,9 +461,9 @@
         
     <footer class="footer">
         <div class="content has-text-centered">
-            <p>
+            <p id='footer-text'>
                 <strong>Mall@Home</strong> creato da Alessio Ricciuti. Il codice sorgente usa la licenza
-                <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+                <a id='footer-link' href="http://opensource.org/licenses/mit-license.php">MIT</a>.
             </p>
         </div>
     </footer>
